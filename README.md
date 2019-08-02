@@ -1,7 +1,7 @@
 # MSX-Basic-Tokenizer  
 v0.1  
 
-Converts a MSX Basic ASCII program to tokenised format.  
+Converts a MSX Basic ASCII program to tokenized format.  
 
 Lightly tested with short programs and a big one only.  
 There should be a lot of fringe cases and specific behaviour not found or tested yet.  
