@@ -1,4 +1,4 @@
-# MSX-Basic-Tokenizer  
+# MSX Basic Tokenizer  
 v0.1  
 
 Converts a MSX Basic ASCII program to tokenized format.  
