@@ -10,7 +10,7 @@ For the sake of speed, an **openMSX** `savestate` file with disk drive enabled i
 
 On the Python code itself enter the location of your **openMSX** instalation and the location of the `savestate` file:  
 ```
-openmsx_filepath = '/<path to>/openmsx.app'  
+openmsx_filepath = '/<path to>/openmsx/openmsx.app'  
 savestate_filepath = '/<path_to>/savestates/savestate.oms'  
 ```
 
