@@ -6,6 +6,8 @@ Converts a MSX Basic ASCII program to tokenized format.
 Lightly tested with short programs and a big one only.  
 There should be a lot of fringe cases and specific behaviour not found or tested yet.  
 
+> If you want something more robust (but more dependent) try the [**openMSX Basic (de)Tokenizer** (`openmsxbatoken.py`)](https://github.com/farique1/MSX-Basic-Tokenizer/blob/master/openmsxbatoken.md).  
+
 Usage:  
 `msxbatoken.py <source> [destination] [-vb #] [-fb]`  
 
