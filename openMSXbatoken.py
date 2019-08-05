@@ -1,3 +1,13 @@
+"""
+openMSX Basic (de)Tokenizer
+v1.0
+
+Uses openMSX to convert an MSX basic program from ASCII to tokenized or vice-versa.
+
+Copyright (C) 2019 - Fred Rique (farique)
+https://github.com/farique1/MSX-Basic-Tokenizer/
+"""
+
 import subprocess
 import argparse
 import os.path
