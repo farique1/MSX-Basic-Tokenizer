@@ -2,8 +2,8 @@ import subprocess
 import argparse
 import os.path
 
-openmsx_filepath = '/Users/Farique/desktop/pessoal/retro/openmsx/openmsx.app'
-savestate_filepath = '/Users/Farique/.openmsx/savestates/Teste.oms'
+openmsx_filepath = '/<path_to>/openmsx/openmsx.app'
+savestate_filepath = '/<path_to>/savestates/savestates.oms'
 
 local_path = os.path.abspath(__file__)
 local_path = os.path.split(local_path)[0]
