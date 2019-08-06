@@ -1,5 +1,7 @@
 # openMSX Basic (de)Tokenizer  
 
+> **Tested only with Sharp HotBit MSX1 and Microsol Disk Rom.**  
+
 Uses **openMSX** to convert a basic program from ASCII to tokenized or vice-versa.  
 
 It calls **openMSX** headless (without screen) and with throttle, mount a path (current = default) as a disk, load a basic file from this path, saves it with the chosen format and closes **openMSX**.  
