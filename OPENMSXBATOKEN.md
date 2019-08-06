@@ -1,12 +1,13 @@
 # openMSX Basic (de)Tokenizer  
 
 > **Tested only with Sharp HotBit MSX1 and Microsol Disk Rom.**  
+> Be careful, **openMSX** can sometimes play rough with `dir as disk`.
 
 Uses **openMSX** to convert a basic program from ASCII to tokenized or vice-versa.  
 
 It calls **openMSX** headless (without screen) and with throttle, mount a path (current = default) as a disk, load a basic file from this path, saves it with the chosen format and closes **openMSX**.  
 
-For the sake of speed, an **openMSX** `savestate` file with disk drive enabled is needed.  
+For the sake of speed and convenience (pre booted with CTRL for instance), an **openMSX** `savestate` file with disk drive enabled is needed.  
 
 ### How to use  
 
