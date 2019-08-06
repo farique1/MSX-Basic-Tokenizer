@@ -1,3 +1,6 @@
+> ## ⚠️ Caution ⚠️
+> ## **openMSX Basic (de)Tokenizer** is sometimes corrupting the disk folder when using with some MSX 2 macines! 
+
 # openMSX Basic (de)Tokenizer  
 
 > **Tested only with Sharp HotBit MSX1 and Microsol Disk Rom.**  
