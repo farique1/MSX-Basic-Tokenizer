@@ -1,24 +1,23 @@
-> ## ⚠️ Caution ⚠️
-> ## **openMSX Basic (de)Tokenizer** is sometimes corrupting the disk folder when using with some MSX 2 macines! 
-
 # openMSX Basic (de)Tokenizer  
-
-> **Tested only with Sharp HotBit MSX1 and Microsol Disk Rom.**  
-> Be careful, **openMSX** can sometimes play rough with `dir as disk`.
 
 Uses **openMSX** to convert a basic program from ASCII to tokenized or vice-versa.  
 
 It calls **openMSX** headless (without screen) and with throttle, mount a path (current = default) as a disk, load a basic file from this path, saves it with the chosen format and closes **openMSX**.  
-
-For the sake of speed and convenience (pre booted with CTRL for instance), an **openMSX** `savestate` file with disk drive enabled is needed.  
+> Be careful with the folder used as a disk. openMSX respects the MSX disk limitations of size (size of all the files must not be greater than the emulated disk size) and file name sizes.  
+> Always work on copies.  
 
 ### How to use  
 
-On the Python code itself enter the location of your **openMSX** instalation and the location of the `savestate` file:  
+On the Python code itself enter the location of your **openMSX** instalation.  
+Also optionally choose a machine and a extension.  
+If no machine is specified the default one will be used.  
+You can name a disk drive extension for machines without one. It will be plugged on the slot A by default but you can force it to slot B by writing `:SlotB` after its name.  
 ```
-openmsx_filepath = '/<path to>/openmsx/openmsx.app'  
-savestate_filepath = '/<path_to>/savestates/savestate.oms'  
+openmsx_filepath = '/<path_to>/openmsx/openmsx.app'
+machine_name = 'Sharp_HB-8000_1.2'
+disk_ext_name = 'Microsol_Disk:SlotB'
 ```
+> Leave the machine and extension variables blank (`''`)  to use the **openMSX** defaults.  
 
 From the terminal call `openmsxbatoken.py`:  
 `openmsxbatoken.py <source> [destination] [-asc] [-vb]`  
@@ -36,6 +35,11 @@ The default save extension will be changed to `.asc`.
 
 `-vb` displays the openMSX output.  
 
+### Known bugs  
+
+An `autoexec.bas` on the disk will run automatically and possibly prevent the conversion.  
+There is a problem passing file names with some special characters, "&" for instance.  
+
 ----------------------
 > Made in a hurry with Python 2.7  
-> Beware a little.
+> Beware a little.  
