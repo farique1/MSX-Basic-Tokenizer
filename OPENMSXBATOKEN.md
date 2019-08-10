@@ -4,14 +4,14 @@ Uses **openMSX** to convert a basic program from ASCII to tokenized or vice-vers
 
 It calls **openMSX** headless (without screen) and with throttle, mount a path (current = default) as a disk, load a basic file from this path, saves it with the chosen format and closes **openMSX**.  
 > Be careful with the folder used as a disk. openMSX respects the MSX disk limitations of size (size of all the files must not be greater than the emulated disk size) and file name sizes.  
-> Always work on copies.  
+> Always work on copies and on a exclusive folder.  
 
 ### How to use  
 
 On the Python code itself enter the location of your **openMSX** instalation.  
-Also optionally choose a machine and a extension.  
+Also optionally choose a machine and an extension.  
 If no machine is specified the default one will be used.  
-You can name a disk drive extension for machines without one. It will be plugged on the slot A by default but you can force it to slot B by writing `:SlotB` after its name.  
+You can name a disk drive extension for machines without one. It will be plugged on the slot A by default but can forced to slot B by writing `:SlotB` after its name.  
 ```
 openmsx_filepath = '/<path_to>/openmsx/openmsx.app'
 machine_name = 'Sharp_HB-8000_1.2'
@@ -35,7 +35,7 @@ The default save extension will be changed to `.asc`.
 
 `-vb` displays the openMSX output.  
 
-### Known bugs  
+### Known issues  
 
 An `autoexec.bas` on the disk will run automatically and possibly prevent the conversion.  
 There is a problem passing file names with some special characters, "&" for instance.  
