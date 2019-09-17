@@ -19,12 +19,13 @@ problem passing special characters on the file names. "&" for instance
 """
 
 # for i in *.bas; do python openmsxbatoken.py "$i" -asc; done
+# *** CAUTION *** An autoexec.bas will crash the script
 
 import subprocess
 import argparse
 import os.path
 
-openmsx_filepath = '/<path_to>/openmsx/openmsx.app'
+openmsx_filepath = '/Users/Farique/desktop/pessoal/retro/openmsx/openmsx.app'
 machine_name = ''  # 'Sharp_HB-8000_1.2' 'Sharp_HB-8000_1.2_Disk' 'Philips_NMS_8250'
 disk_ext_name = ''  # 'Microsol_Disk:SlotB'
 
@@ -90,6 +91,9 @@ def output(show_output, step):
         if show_output:
             print log_out + ': ' + step
 
+
+file_save = os.path.basename(file_save)
+file_save = os.path.splitext(file_save)[0][0:8] + os.path.splitext(file_save)[1]
 
 disk_path = disk_path.replace(' ', r'\ ')
 file_load = file_load.replace(' ', r'\ ')
