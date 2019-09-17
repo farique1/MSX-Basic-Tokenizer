@@ -95,13 +95,13 @@ If no name is given the  `source`  name will be used with a  `.bas`  or  `.asc` 
 (Beware that the source CAN be overwritten).  
 
 `-asc`  
-*The format to save.*
+*The format to save.*  
 Save the file in ASCII instead of tokenized.  
 The default save extension will be changed to  `.asc`.
 
 `-vb`  
 *Verbose.*  
-Displays the openMSX output.
+Displays the openMSX output.  
 
 ### Known bugs
 
@@ -116,7 +116,7 @@ Some tools made to help develop and test the Tokenizer.
 
 ## Token Compare  
 
-Convert ASCII listings with **MSXBatoken** and compares it with a conversion from **openMSXBatoken** (using a "real" MSX).  
+Convert ASCII listings with **MSXBatoken** and compares them with a conversion from **openMSXBatoken** (using a "real" MSX).  
 
 ## Token Format Viz
 
