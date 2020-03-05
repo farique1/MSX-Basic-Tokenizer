@@ -1,7 +1,7 @@
 <img src="https://github.com/farique1/MSX-Basic-Tokenizer/blob/master/Images/GitHub_Batoken_Logo-02.png" alt="MSX Basic Tokenizer" width="290" height="130">  
   
 # MSX Basic Tokenizer  
-**v1.2** (this is probably the last version in Python 2.7 [we can hope])  
+**v1.2** -(this is probably the last version in Python 2.7 [we can hope])  
   
 Tokenize ASCII MSX Basic programs.  
   
