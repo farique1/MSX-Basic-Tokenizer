@@ -1,5 +1,12 @@
 # MSX Basic Tokenizer  
   
+## **v1.3**  
+***14-2-2020***  
+- Python 3.8.  
+- No more forcing an 8 character file name.  
+- Changed `-fb` to `-frb`.  
+- Warning issued if didn't delete original.  
+  
 ## **v1.2**  
 ***29-1-2020***  
 - Bring version up to 1.2 to sync with **openMSX Basic (de)Tokenizer**.  
@@ -36,6 +43,18 @@
 ---  
   
 # openMSX Basic (de)Tokenizer  
+  
+## **v1.3**  
+***14-2-2020***  
+  
+- Python 3.8.  
+- Better subprocess call and IO handling.  
+- Improved verbose output.  
+- Changed `-fb` to `-frb`.  
+- Warning issued if didn' delete original.  
+- Fixed bug and better handling when trying to load or save files with spaces and more than 8 characters.  
+	- Files opened on openMSX now are internally cropped to 8 char and have spaces replaced with `_`  
+	- Error if conflicting file names due to disk format limitations.  
   
 ## **v1.2**  
 ***29-1-2020***  

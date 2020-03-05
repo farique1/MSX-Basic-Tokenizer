@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
 """
 MSX Basic Tokenizer
-v1.2
+v1.3
 Convert ASCII MSX Basic to tokenized format
 
 Copyright (C) 2019-2020 - Fred Rique (farique)
@@ -18,21 +19,11 @@ Convert modern MSX Basic Dignified to traditional MSX Basic format.
 msxbatoken.py <source> <destination> [args...]
 msxbatoken.py -h for help.
 
-New: 18-1-2020 v1.1
-    Bring version up to 1.2 to sync with openMSX Basic (de)Tokenizer.
-    Fully integrated with the Badig ecosystem.
-        Can be automatically called by the build system on MSX Sublime Tools and from MSX Basic Dignified.
-    Created an .ini file with file_load, file_save, export_list, delete_original and verbose_level.
-    Verbose level and log output upgraded to follow the Badig standard and elevated the tokenisation step by step to level 5.
-    Added -do (delete original) argument to delete the original ASCII file after the conversion.
-    Removed the -bw (byte width) argument.
-    Changed -sl (save list) to -el (export list) to avoid clash with Dignified's -sl (show labels).
-    -el now takes the numeric arguments from -bw.
-    Better -fb (from build) response
-    Throw an error if destination is the same as the source
-    Removed unnecessary global variables from functions.
-    Better error handling
-    Small code optimizations
+New: 1.3 14-02-2020
+    Python 3.8.
+    No more forcing an 8 character file name.
+    Changed -fb to -frb.
+    Warning issued if didn't delete original.
 
 Notes:
     Known discrepancies:
@@ -53,15 +44,15 @@ import re
 import os.path
 import binascii
 import argparse
-import ConfigParser
+import configparser
 from datetime import datetime
 from os import remove as osremove
 
 file_load = ''              # Source file
 file_save = ''              # Destination file
-export_list = 16            # Save a .mlt list file detailing the tokenization: [#] number of bytes per line (def 16) (max 32) (0 no)
+export_list = 0             # Save a .mlt list file detailing the tokenization: [#] number of bytes per line (def 16) (max 32) (0 no)
 delete_original = False     # Delete the original ASCII file
-verbose_level = 4           # Verbosity level: 0 silent, 1 errors, 2 +warnings, 3 +steps(def), 4 +details, 5 +conversion dump
+verbose_level = 3           # Verbosity level: 0 silent, 1 errors, 2 +warnings, 3 +steps(def), 4 +details, 5 +conversion dump
 is_from_build = False       # Tell if it is being called from a build system (show file name on error messages and other stuff)
 
 
@@ -80,20 +71,20 @@ def show_log(line_number, text, level, **kwargs):
     line_number = '(' + str(line_number) + '): ' if line_number != '' else ''
 
     if verbose_level >= level:
-        print bullets[bullet] + display_file_name + line_number + text
+        print(bullets[bullet] + display_file_name + line_number + text)
 
     if bullet == 1:
         if is_from_build:
-            print '    Tokenizing_aborted'
+            print('    Tokenizing_aborted')
         else:
-            print '    Execution_stoped'
-            print
+            print('    Execution_stoped')
+            print()
         raise SystemExit(0)
 
 
 local_path = os.path.split(os.path.abspath(__file__))[0] + '/'
 if os.path.isfile(local_path + 'MSXBatoken.ini'):
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.sections()
     try:
         config.read(local_path + 'MSXBatoken.ini')
@@ -102,7 +93,7 @@ if os.path.isfile(local_path + 'MSXBatoken.ini'):
         export_list = config.getboolean('DEFAULT', 'export_list') if config.get('DEFAULT', 'export_list') else export_list
         delete_original = config.getboolean('DEFAULT', 'delete_original') if config.get('DEFAULT', 'delete_original') else delete_original
         verbose_level = config.getint('DEFAULT', 'verbose_level') if config.get('DEFAULT', 'verbose_level') else verbose_level
-    except (ValueError, ConfigParser.NoOptionError) as e:
+    except (ValueError, configparser.NoOptionError) as e:
         show_log('', 'MSXBatoken.ini: ' + str(e), 1)
 
 parser = argparse.ArgumentParser(description='Tokenize ASCII MSX Basic')
@@ -111,7 +102,7 @@ parser.add_argument("output", nargs='?', default=file_save, help='Destination fi
 parser.add_argument("-el", default=export_list, const=16, type=int, nargs='?', help="Save a .mlt list file detailing the tokenization: [#] number of bytes per line (def 16) (max 32)")
 parser.add_argument("-do", default=delete_original, action='store_true', help="Delete original file after conversion")
 parser.add_argument("-vb", default=verbose_level, type=int, help="Verbosity level: 0 silent, 1 errors, 2 +warnings, 3 +steps(def), 4 +details, 5 +conversion dump")
-parser.add_argument("-fb", default=is_from_build, action='store_true', help="Tell it is running from a build system")
+parser.add_argument("-frb", default=is_from_build, action='store_true', help="Tell it is running from a build system")
 args = parser.parse_args()
 
 file_load = args.input
@@ -120,13 +111,13 @@ if args.output == '':
     save_path = os.path.dirname(file_load)
     save_path = '' if save_path == '' else save_path + '/'
     save_file = os.path.basename(file_load)
-    save_file = os.path.splitext(save_file)[0][0:8] + '.bas'
+    save_file = os.path.splitext(save_file)[0] + '.bas'
     file_save = save_path + save_file
 bytes_width = min(abs(args.el), 32)
 export_list = True if args.el > 0 else False
 delete_original = args.do
 verbose_level = args.vb
-is_from_build = args.fb
+is_from_build = args.frb
 
 lines_num = 0
 width_byte = bytes_width * 2
@@ -206,7 +197,7 @@ def make_list(base_prev, compiled, source):
         list_code.append(line_list)
         next_addr, curr_line, source = '        ', '', ''
         base_prev += line_inc
-        line_inc = len(line) / 2
+        line_inc = len(line) // 2
 
 
 def parse_sgn_dbl(header, precision, nugget_integer, nugget_fractional, nugget_group_1_orig, nugget_number):
@@ -242,7 +233,7 @@ ascii_code = []
 if file_load:
     show_log('', ' '.join(['load_file:', file_load]), 4)
     try:
-        with open(file_load, 'r') as f:
+        with open(file_load, 'r', encoding='latin1') as f:
             for line in f:
                 if line.strip() == "" or line.strip().isdigit():
                     continue
@@ -301,7 +292,7 @@ for line_source in ascii_code:
                 source = len(command)
                 update_lines(source, compiled)
 
-                if command is 'AS':
+                if command == 'AS':
                     nugget = re.match(r'(\s*)(\d{1,2})', line_source)
                     if nugget:
                         nugget_spaces = nugget.group(1)
@@ -524,7 +515,7 @@ for line_source in ascii_code:
                         update_lines(source, compiled)
 
     base_prev = base
-    base += (len(line_compiled) + 6) / 2
+    base += (len(line_compiled) + 6) // 2
     hexa = '{0:04x}'.format(base)
     line_compiled = hexa[2:] + hexa[:-2] + line_compiled
     line_compiled += '00'
@@ -551,10 +542,14 @@ with open(file_save, 'wb') as f:
     for line in tokenized_code:
         f.write(binascii.unhexlify(line))
 
-if os.path.isfile(file_save) and delete_original:
-    show_log('', 'Deleting source', 3)
-    show_log('', ' '.join(['delete_file:', file_load]), 4)
-    osremove(file_load)
+if delete_original:
+    if os.path.isfile(file_save):
+        show_log('', 'Deleting source', 3)
+        show_log('', ' '.join(['delete_file:', file_load]), 4)
+        osremove(file_load)
+    else:
+        show_log('', ' '.join(['source_not_deleted', file_load]), 2)
+        show_log('', ' '.join(['converted_not_found', file_save]), 2)
 
 if export_list:
     show_log('', 'Saving list', 3)

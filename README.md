@@ -1,7 +1,7 @@
 <img src="https://github.com/farique1/MSX-Basic-Tokenizer/blob/master/Images/GitHub_Batoken_Logo-02.png" alt="MSX Basic Tokenizer" width="290" height="130">  
   
 # MSX Basic Tokenizer  
-**v1.2** -(this is probably the last version in Python 2.7 [we can hope])  
+**v1.3** - **Python 3.8!**  
   
 Tokenize ASCII MSX Basic programs.  
   
@@ -10,7 +10,7 @@ Tokenize ASCII MSX Basic programs.
   
 ### How to use  
   
-`msxbatoken.py <source> [destination] [-do] [-el [0-32]] [-vb <0-5>] [-fb]`  
+`msxbatoken.py <source> [destination] [-do] [-el [0-32]] [-vb <0-5>] [-frb]`  
   
 Arguments can be passed on the code itself, on `MSXBatoken.ini` or through the command line with each method having a priority higher than the one before.  
   
@@ -83,7 +83,7 @@ Arguments can be passed on the code itself, on `MSXBatoken.ini` or through the c
   
 - *From Build:*  
 	Tells **MSX Basic Tokenizer** it is running from a build system (or an external program) and adjust some behaviours accordingly.  
-	arg: `-fb`  
+	arg: `-frb`  
   
 ### Notes  
   
@@ -102,24 +102,23 @@ Some errors on the code stop the conversion. They are:
   
   
 # openMSX Basic (de)Tokenizer  
-v1.2  
+**v1.3** - **Python 3.8!**  
+  
 Uses  **openMSX**  to convert a basic program from ASCII to tokenized or vice-versa.  
   
 It calls  **openMSX**  headless (without screen) and with throttle, mount a path (current = default) as a disk, load a basic file from this path, saves it with the chosen format and closes  **openMSX**.  
   
 The path to an installation of  **openMSX** is needed and a machine can be chosen to overwrite the default one. A disk drive extension can also be chosen for machines without one, it will be plugged on the slot A by default but it can force to slot B by putting `:SlotB`  after its name.  
   
-> Be careful with the folder used as a disk. **openMSX** respects the MSX disk limitations of size (size of all the files must not be greater than the emulated disk size) and file name sizes and characters.  
+> Be careful with the folder used as a disk. **openMSX** respects the MSX disk limitations of size (size of all the files must not be greater than the emulated disk size), file name sizes and characters.  
 > Always work on copies.  
   
 > **MSX Basic Tokenizer** is now fully integrated with the **Badig**  ecosystem.  
 > It can be automatically called by the build system on **[MSX Sublime Tools](https://github.com/farique1/MSX-Sublime-Tools)** and from **[MSX Basic Dignified](https://github.com/farique1/msx-basic-dignified)**.  
   
-> ##### (this is probably the last version in Python 2.7 [we can hope])  
-  
 ### How to use  
   
-`openmsxbatoken.py <source> [destination] [-of <t|a>] [-do] [-vb <0-5>] [-fb]`  
+`openmsxbatoken.py <source> [destination] [-of <t|a>] [-do] [-vb <0-5>] [-frb]`  
   
 Arguments can be passed on the Python code itself, on `openMSXBatoken.ini` or through the command line with each method having a priority higher than the one before.  
   
@@ -179,7 +178,7 @@ Plugged on the slot A by default, can force to slot B by putting `:SlotB`  after
   
 - *From Build:*  
 	Tells **openMSX Basic (de)Tokenizer** it is running from a build system (or an external program) and adjust some behaviours accordingly.  
-	arg: `-fb`  
+	arg: `-frb`  
   
 ### Known bugs  
   
@@ -208,5 +207,6 @@ Generate MSX Basic lines with random numbers of several types.
 Generate integer, single, double and scientific notation numbers.  
   
 ------------  
-All made with Python 2.7  
+Main tokenizers Python 3.8.  
+Helper tools Python 2.7.  
 Use with care.  
