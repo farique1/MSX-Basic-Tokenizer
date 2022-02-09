@@ -3,8 +3,8 @@
 ## **v1.4**  
 ***10-12-2021***  
 - WINDOWS COMPATIBILITY YEY!  
-	- os.path() operations to improve compatibility across systems  
-- Changed .INI section names  
+	- `os.path()` operations to improve compatibility across systems.  
+- Changed `.ini` section names.  
   
 ## **v1.3**  
 ***14-2-2020***  
@@ -53,9 +53,9 @@
 ## **v1.4**  
 ***10-12-2021***  
 - WINDOWS COMPATIBILITY YEY!  
-	- Individual Windows and Mac paths on the .INI file  
-	- os.path() operations to improve compatibility across systems  
-- Changed .INI section names  
+	- Individual Windows and Mac paths on the `.ini` file.  
+	- `os.path()` operations to improve compatibility across systems.  
+- Changed `.ini` section names.  
   
 ## **v1.3**  
 ***14-2-2020***  
