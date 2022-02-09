@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
 openMSX Basic (de)Tokenizer
-v1.3
+v1.4
 Uses openMSX to tokenize ASCII MSX Basic or vice-versa.
 
-Copyright (C) 2019-2020 - Fred Rique (farique)
+Copyright (C) 2019-2022 - Fred Rique (farique)
 https://github.com/farique1/MSX-Basic-Tokenizer
 
 See also:
@@ -19,21 +19,19 @@ Convert modern MSX Basic Dignified to traditional MSX Basic format.
 openmsxbatoken.py <source> <destination> [args...]
 openmsxbatoken.py -h for help.
 
-New: 1.3 14-02-2020
-    Python 3.8.
-    Better subprocess call and IO handling.
-    Improved verbose output.
-    Changed -fb to -frb.
-    Warning issued if didn' delete original.
-    Fixed bug and better handling when trying to load or save files with spaces and more than 8 characters.
-        Files opened on openMSX now are internally cropped to 8 char and have spaces replaced with _
-        Error if conflicting file names due to disk format limitations.
+New: 1.4v 10/12/2021
+    WINDOWS COMPATIBILITY YEY!
+        Individual Windows and Mac paths on the .INI file
+        os.path() operations to improve compatibility across systems
+    Changed .INI section names
 """
 
 # for i in *.bas; do python openmsxbatoken.py "$i" -asc; done
 # *** CAUTION *** An autoexec.bas on the mounted folder will crash the script
 
+import time
 import os.path
+import platform
 import argparse
 import subprocess
 import configparser
@@ -49,6 +47,9 @@ delete_original = False     # Delete the original file
 verbose_level = 3           # Show processing status: 0-silent 1-+erros 2-+warnings 3-+steps 4-+details
 is_from_build = False       # Tell if it is being called from a build system (show file name on error messages and other stuff)
 openmsx_filepath = ''       # Path to openMSX ('' = local path)
+
+is_windows = platform.system() == "Windows"  # Get the operating system
+openmsx_app = 'openmsx.exe' if is_windows else 'openmsx.app'
 
 
 def show_log(line, text, level, **kwargs):
@@ -80,20 +81,22 @@ def show_log(line, text, level, **kwargs):
         raise SystemExit(0)
 
 
-local_path = os.path.split(os.path.abspath(__file__))[0] + '/'
-if os.path.isfile(local_path + 'openMSXBatoken.ini'):
+local_path = os.path.split(os.path.abspath(__file__))[0]
+ini_path = os.path.join(local_path, 'openMSXBatoken.ini')
+if os.path.isfile(ini_path):
+    ini_section = 'WINPATHS' if is_windows else 'MACPATHS'
     config = configparser.ConfigParser()
     config.sections()
     try:
-        config.read(local_path + 'openMSXBatoken.ini')
-        file_load = config.get('DEFAULT', 'file_load') if config.get('DEFAULT', 'file_load') else file_load
-        file_save = config.get('DEFAULT', 'file_save') if config.get('DEFAULT', 'file_save') else file_save
-        machine_name = config.get('DEFAULT', 'machine_name') if config.get('DEFAULT', 'machine_name') else machine_name
-        disk_ext_name = config.get('DEFAULT', 'disk_ext_name') if config.get('DEFAULT', 'disk_ext_name').strip() else disk_ext_name
-        output_format = config.get('DEFAULT', 'Output_format') if config.get('DEFAULT', 'Output_format') else output_format
-        delete_original = config.getboolean('DEFAULT', 'delete_original') if config.get('DEFAULT', 'delete_original') else delete_original
-        verbose_level = config.getint('DEFAULT', 'verbose_level') if config.get('DEFAULT', 'verbose_level') else verbose_level
-        openmsx_filepath = config.get('DEFAULT', 'openmsx_filepath') if config.get('DEFAULT', 'openmsx_filepath') else openmsx_filepath
+        config.read(ini_path)
+        file_load = config.get('CONFIGS', 'file_load') if config.get('CONFIGS', 'file_load') else file_load
+        file_save = config.get('CONFIGS', 'file_save') if config.get('CONFIGS', 'file_save') else file_save
+        machine_name = config.get('CONFIGS', 'machine_name') if config.get('CONFIGS', 'machine_name') else machine_name
+        disk_ext_name = config.get('CONFIGS', 'disk_ext_name') if config.get('CONFIGS', 'disk_ext_name').strip() else disk_ext_name
+        output_format = config.get('CONFIGS', 'Output_format') if config.get('CONFIGS', 'Output_format') else output_format
+        delete_original = config.getboolean('CONFIGS', 'delete_original') if config.get('CONFIGS', 'delete_original') else delete_original
+        verbose_level = config.getint('CONFIGS', 'verbose_level') if config.get('CONFIGS', 'verbose_level') else verbose_level
+        openmsx_filepath = config.get(ini_section, 'openmsx_filepath') if config.get(ini_section, 'openmsx_filepath') else openmsx_filepath
     except (ValueError, configparser.NoOptionError) as e:
         show_log('', 'openMSXBatoken.ini: ' + str(e), 1)
 
@@ -125,7 +128,7 @@ using_machine = 'default machine'
 disk_ext_slot = 'ext'
 proc = ''
 if openmsx_filepath == '':
-    openmsx_filepath = local_path + 'openMSX.app'
+    openmsx_filepath = os.path.join(local_path, openmsx_app)
 if machine_name != '':
     using_machine = machine_name
     machine_name = ['-machine', machine_name]
@@ -159,17 +162,17 @@ if crop_save == file_load:
 
 list_dir = os.listdir(disk_path)
 list_load = [x for x in list_dir if
-             x.lower() != file_load.lower() and
-             os.path.splitext(x)[0][0:8].replace(' ', '_').lower() +
-             os.path.splitext(x)[1].replace(' ', '_').lower() ==
-             crop_load.lower()]
+             x.lower() != file_load.lower()
+             and os.path.splitext(x)[0][0:8].replace(' ', '_').lower()
+             + os.path.splitext(x)[1].replace(' ', '_').lower()
+             == crop_load.lower()]
 
 list_save = [x for x in list_dir if
-             x.lower() != file_load.lower() and
-             os.path.splitext(x)[0][0:8].replace(' ', '_').lower() +
-             os.path.splitext(x)[1].replace(' ', '_').lower() ==
-             crop_load.lower() and
-             len(os.path.splitext(x)[0][0:8]) > 8]
+             x.lower() != file_load.lower()
+             and os.path.splitext(x)[0][0:8].replace(' ', '_').lower()
+             + os.path.splitext(x)[1].replace(' ', '_').lower()
+             == crop_load.lower()
+             and len(os.path.splitext(x)[0][0:8]) > 8]
 
 list_all = list_load.extend(list_save)
 
@@ -212,7 +215,12 @@ def output(show_output, has_input, step):
                 show_log('', ''.join([step, log_comma, log_out]), 3)
 
 
-cmd = [openmsx_filepath + '/contents/macos/openmsx', '-control', 'stdio']
+if is_windows:
+    disk_path = disk_path.replace('\\', '/')  # cmd apparently needs forward slashes even on Windows
+    cmd = [openmsx_filepath, '-control', 'stdio']
+else:
+    cmd = [os.path.join(openmsx_filepath, 'contents', 'macos', 'openmsx'), '-control', 'stdio']
+
 if machine_name != '':
     cmd.extend(machine_name)
 
@@ -253,9 +261,10 @@ output(show_output, True, 'type save"' + crop_save + save_argument)
 proc.stdin.write('<command>type_via_keybuf poke-2,0\\r</command>' + endline)
 output(show_output, True, 'Quit')
 
-proc.wait()
+time.sleep(1)
 
-file_save_full = disk_path + '/' + crop_save
+file_save_full = os.path.join(disk_path, crop_save)
+print(file_save_full)
 if delete_original:
     if os.path.isfile(file_save_full):
         show_log('', 'Deleting source', 3)

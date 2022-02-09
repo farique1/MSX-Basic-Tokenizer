@@ -1,7 +1,7 @@
 <img src="https://github.com/farique1/MSX-Basic-Tokenizer/blob/master/Images/GitHub_Batoken_Logo-02.png" alt="MSX Basic Tokenizer" width="290" height="130">  
   
 # MSX Basic Tokenizer  
-**v1.3** - **Python 3.8!**  
+**v1.4**  
   
 Tokenize ASCII MSX Basic programs.  
   
@@ -102,7 +102,7 @@ Some errors on the code stop the conversion. They are:
   
   
 # openMSX Basic (de)Tokenizer  
-**v1.3** - **Python 3.8!**  
+**v1.4**  
   
 Uses  **openMSX**  to convert a basic program from ASCII to tokenized or vice-versa.  
   
@@ -127,13 +127,15 @@ Arguments can be passed on the Python code itself, on `openMSXBatoken.ini` or th
 On `openMSXBatoken.ini` specify:  
   
 - An alternate machine to overwrite the default one.  
-`machine_name =` (opitional)  
+`machine_name =` (optional)  
 - A disk extension for machines without one.  
 Plugged on the slot A by default, can force to slot B by putting `:SlotB`  after its name.  
 `disk_ext_name =` (optional)  
-- The path to `openMSX.app` on an installation of **openMSX**.  
+-  Under `[WINPATHS]`, the path to `openMSX.exe` on an installation of **openMSX** if using Windows.  
 `openmsx_filepath =` (required)  
-  
+- Under `[MACPATHS]`, the path to `openMSX.app` on an installation of **openMSX** if using MacOS.  
+`openmsx_filepath =` (required)  
+> The individual path sections in the `.ini` file for each of the systems is so if you are like me you can just be working on the same program on a PC and a Mac **at the same time**.    
 > There are no command line arguments for these.  
   
 #### Arguments  

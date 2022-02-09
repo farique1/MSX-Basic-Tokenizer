@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
 MSX Basic Tokenizer
-v1.3
+v1.4
 Convert ASCII MSX Basic to tokenized format
 
-Copyright (C) 2019-2020 - Fred Rique (farique)
+Copyright (C) 2019-2022 - Fred Rique (farique)
 https://github.com/farique1/MSX-Basic-Tokenizer
 
 See also:
@@ -19,11 +19,10 @@ Convert modern MSX Basic Dignified to traditional MSX Basic format.
 msxbatoken.py <source> <destination> [args...]
 msxbatoken.py -h for help.
 
-New: 1.3 14-02-2020
-    Python 3.8.
-    No more forcing an 8 character file name.
-    Changed -fb to -frb.
-    Warning issued if didn't delete original.
+New: 1.4v 10/12/2021
+    WINDOWS COMPATIBILITY YEY!
+        os.path() operations to improve compatibility across systems
+    Changed .INI section names
 
 Notes:
     Known discrepancies:
@@ -82,17 +81,18 @@ def show_log(line_number, text, level, **kwargs):
         raise SystemExit(0)
 
 
-local_path = os.path.split(os.path.abspath(__file__))[0] + '/'
-if os.path.isfile(local_path + 'MSXBatoken.ini'):
+local_path = os.path.split(os.path.abspath(__file__))[0]
+ini_path = os.path.join(local_path, 'MSXBatoken.ini')
+if os.path.isfile(ini_path):
     config = configparser.ConfigParser()
     config.sections()
     try:
-        config.read(local_path + 'MSXBatoken.ini')
-        file_load = config.get('DEFAULT', 'file_load') if config.get('DEFAULT', 'file_load') else file_load
-        file_save = config.get('DEFAULT', 'file_save') if config.get('DEFAULT', 'file_save') else file_save
-        export_list = config.getboolean('DEFAULT', 'export_list') if config.get('DEFAULT', 'export_list') else export_list
-        delete_original = config.getboolean('DEFAULT', 'delete_original') if config.get('DEFAULT', 'delete_original') else delete_original
-        verbose_level = config.getint('DEFAULT', 'verbose_level') if config.get('DEFAULT', 'verbose_level') else verbose_level
+        config.read(ini_path)
+        file_load = config.get('CONFIGS', 'file_load') if config.get('CONFIGS', 'file_load') else file_load
+        file_save = config.get('CONFIGS', 'file_save') if config.get('CONFIGS', 'file_save') else file_save
+        export_list = config.getboolean('CONFIGS', 'export_list') if config.get('CONFIGS', 'export_list') else export_list
+        delete_original = config.getboolean('CONFIGS', 'delete_original') if config.get('CONFIGS', 'delete_original') else delete_original
+        verbose_level = config.getint('CONFIGS', 'verbose_level') if config.get('CONFIGS', 'verbose_level') else verbose_level
     except (ValueError, configparser.NoOptionError) as e:
         show_log('', 'MSXBatoken.ini: ' + str(e), 1)
 
@@ -109,10 +109,10 @@ file_load = args.input
 file_save = args.output
 if args.output == '':
     save_path = os.path.dirname(file_load)
-    save_path = '' if save_path == '' else save_path + '/'
+    save_path = '' if save_path == '' else save_path
     save_file = os.path.basename(file_load)
     save_file = os.path.splitext(save_file)[0] + '.bas'
-    file_save = save_path + save_file
+    file_save = os.path.join(save_path, save_file)
 bytes_width = min(abs(args.el), 32)
 export_list = True if args.el > 0 else False
 delete_original = args.do
@@ -124,10 +124,10 @@ width_byte = bytes_width * 2
 width_line = bytes_width * 3 + 7
 now = datetime.now()
 list_path = os.path.dirname(file_load)
-list_path = '' if list_path == '' else list_path + '/'
+# list_path = '' if list_path == '' else list_path
 list_file = os.path.basename(file_load)
 list_file = os.path.splitext(list_file)[0] + '.mlt'
-file_list = list_path + list_file
+file_list = os.path.join(list_path, list_file)
 tokens = [('>', 'ee'), ('PAINT', 'bf'), ('=', 'ef'), ('ERROR', 'a6'), ('ERR', 'e2'), ('<', 'f0'), ('+', 'f1'),
           ('FIELD', 'b1'), ('PLAY', 'c1'), ('-', 'f2'), ('FILES', 'b7'), ('POINT', 'ed'), ('*', 'f3'), ('POKE', '98'),
           ('/', 'f4'), ('FN', 'de'), ('^', 'f5'), ('FOR', '82'), ('PRESET', 'c3'), ('\\', 'fc'), ('PRINT', '91'), ('?', '91'),
@@ -376,8 +376,8 @@ for line_source in ascii_code:
                     if int(nugget_number) >= 32768:
                         show_log(line_number, ' '.join(['overflow', str(nugget_number)]), 1)  # Exit
                 elif nugget_signal != '%' and nugget_signal != '!' and nugget_signal != '#' and \
-                        ((nugget_signal.lower() != 'e' and nugget_signal.lower() != 'd') or
-                         (nugget_notif_confirm != '-' and nugget_notif_confirm != '+')):
+                        ((nugget_signal.lower() != 'e' and nugget_signal.lower() != 'd')
+                         or (nugget_notif_confirm != '-' and nugget_notif_confirm != '+')):
                     nugget_signal = ''
                     if nugget_fractional == '':
                         is_int = True

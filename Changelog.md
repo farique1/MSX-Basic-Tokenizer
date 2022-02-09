@@ -1,5 +1,11 @@
 # MSX Basic Tokenizer  
   
+## **v1.4**  
+***10-12-2021***  
+- WINDOWS COMPATIBILITY YEY!  
+	- os.path() operations to improve compatibility across systems  
+- Changed .INI section names  
+  
 ## **v1.3**  
 ***14-2-2020***  
 - Python 3.8.  
@@ -44,9 +50,15 @@
   
 # openMSX Basic (de)Tokenizer  
   
+## **v1.4**  
+***10-12-2021***  
+- WINDOWS COMPATIBILITY YEY!  
+	- Individual Windows and Mac paths on the .INI file  
+	- os.path() operations to improve compatibility across systems  
+- Changed .INI section names  
+  
 ## **v1.3**  
 ***14-2-2020***  
-  
 - Python 3.8.  
 - Better subprocess call and IO handling.  
 - Improved verbose output.  
